@@ -15,14 +15,16 @@ public class Dicionario {
 	}
 
 	public void setIdioma(String idioma) throws Exception {
-		File arquivo = new File("src/dados/" + idioma.toLowerCase() + ".csv");
-		if (!arquivo.exists()) {
-			throw new Exception("Idioma não encontrado: " + idioma);
-		}
+	    String caminhoArquivo = "/dados/" + idioma.toLowerCase() + ".csv";
 
-		this.idiomaCorrente = idioma;
-		carregarTraducoes(arquivo);
+	    try (Scanner scanner = new Scanner(getClass().getResourceAsStream(caminhoArquivo))) {
+	        this.idiomaCorrente = idioma;
+	        carregarTraducoes(scanner);
+	    } catch (Exception e) {
+	        throw new Exception("Idioma não encontrado ou erro ao carregar: " + idioma, e);
+	    }
 	}
+
 
 	public String getIdiomaCorrente() {
 		return idiomaCorrente;
@@ -30,23 +32,21 @@ public class Dicionario {
 
 	public ArrayList<String> getIdiomas() {
 		ArrayList<String> idiomas = new ArrayList<>();
-		idiomas.add("Inglês");
+		idiomas.add("Ingles");
 		idiomas.add("Espanhol");
-		idiomas.add("Alemão");
+		idiomas.add("Alemao");
 		return idiomas;
 	}
 
-	private void carregarTraducoes(File arquivo) throws FileNotFoundException {
-		traducoes.clear();
-		Scanner scanner = new Scanner(arquivo);
-		while (scanner.hasNextLine()) {
-			String linha = scanner.nextLine();
-			String[] partes = linha.split(";");
-			if (partes.length == 2) {
-				traducoes.add(partes);
-			}
-		}
-		scanner.close();
+	private void carregarTraducoes(Scanner scanner) {
+	    traducoes.clear();
+	    while (scanner.hasNextLine()) {
+	        String linha = scanner.nextLine();
+	        String[] partes = linha.split(";");
+	        if (partes.length == 2) {
+	            traducoes.add(partes);
+	        }
+	    }
 	}
 
 	public ArrayList<String> traduzirParaPortugues(String termo) {

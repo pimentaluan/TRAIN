@@ -8,10 +8,11 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.awt.Toolkit;
 
 public class TelaDicionario extends JFrame {
     private JTextField textField;
-    private JButton button;
+    private JButton buttonTraduzir, buttonBuscar;
     private JLabel label;
     private JLabel label_1;
     private JComboBox comboBox;
@@ -19,59 +20,68 @@ public class TelaDicionario extends JFrame {
     private JLabel label_4;
     private JTextArea textArea;
     private JLabel label_2;
-    private JLabel label_5; // Para exibir a bandeira
+    private JLabel label_5;
 
-    private Dicionario dicionario; // Instância da classe Dicionario
+    private Dicionario dicionario;
 
     public TelaDicionario() {
+    	setForeground(new Color(192, 192, 192));
+    	setIconImage(Toolkit.getDefaultToolkit().getImage(TelaDicionario.class.getResource("/imagens/icon.jpeg")));
         getContentPane().setBackground(new Color(0, 128, 255));
         setBackground(new Color(192, 192, 192));
         setTitle("TRAIN");
-        setSize(450, 400);
+        setSize(500, 450);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().setLayout(null);
 
-        // Campo de entrada de texto
         textField = new JTextField();
         textField.setBounds(87, 130, 204, 27);
         getContentPane().add(textField);
         textField.setColumns(10);
 
-        // Botão de tradução
-        button = new JButton("Traduzir");
-        button.setForeground(new Color(255, 255, 255));
-        button.setBackground(new Color(0, 0, 0));
-        button.setFont(new Font("Dubai", Font.BOLD, 12));
-        button.addActionListener(new ActionListener() {
+        buttonTraduzir = new JButton("Traduzir");
+        buttonTraduzir.setForeground(new Color(255, 255, 255));
+        buttonTraduzir.setBackground(new Color(0, 0, 0));
+        buttonTraduzir.setFont(new Font("Dubai", Font.BOLD, 12));
+        buttonTraduzir.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 traduzirPalavra();
             }
         });
-        button.setBounds(137, 200, 100, 23);
-        getContentPane().add(button);
+        buttonTraduzir.setBounds(87, 200, 100, 23);
+        getContentPane().add(buttonTraduzir);
 
-        // Rótulos e informações adicionais
+        buttonBuscar = new JButton("Buscar");
+        buttonBuscar.setForeground(new Color(255, 255, 255));
+        buttonBuscar.setBackground(new Color(0, 0, 0));
+        buttonBuscar.setFont(new Font("Dubai", Font.BOLD, 12));
+        buttonBuscar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                buscarPalavra();
+            }
+        });
+        buttonBuscar.setBounds(200, 200, 100, 23);
+        getContentPane().add(buttonBuscar);
+
         label = new JLabel("Insira a palavra");
         label.setFont(new Font("Dubai", Font.BOLD, 14));
         label.setForeground(new Color(255, 255, 255));
         label.setBounds(87, 115, 150, 14);
         getContentPane().add(label);
 
-        label_1 = new JLabel("Tradução:");
+        label_1 = new JLabel("Resultado:");
         label_1.setForeground(Color.WHITE);
         label_1.setFont(new Font("Dubai", Font.BOLD, 14));
         label_1.setBounds(87, 250, 150, 14);
         getContentPane().add(label_1);
 
-        // ComboBox para escolha do idioma
         comboBox = new JComboBox();
-        comboBox.setModel(new DefaultComboBoxModel(new String[]{"Inglês", "Espanhol", "Alemão"}));
+        comboBox.setModel(new DefaultComboBoxModel(new String[]{"Ingles", "Espanhol", "Alemao"}));
         comboBox.setToolTipText("");
         comboBox.setBounds(88, 29, 100, 22);
         comboBox.setSelectedIndex(0);
         getContentPane().add(comboBox);
 
-        // Listener para mudança de idioma
         comboBox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 atualizarIdioma();
@@ -85,59 +95,52 @@ public class TelaDicionario extends JFrame {
         getContentPane().add(label_3);
 
         textArea = new JTextArea();
-        textArea.setBounds(87, 275, 204, 22);
+        textArea.setBounds(87, 275, 300, 50);
         textArea.setEditable(false);
         getContentPane().add(textArea);
 
-        label_2 = new JLabel("Inglês");
+        label_2 = new JLabel("Ingles");
         label_2.setBounds(157, 79, 59, 14);
         getContentPane().add(label_2);
 
-        // Label para exibir a bandeira
         label_5 = new JLabel();
-        label_5.setBounds(87, 59, 59, 46); // Define a posição e tamanho da label
+        label_5.setBounds(87, 59, 59, 46);
         getContentPane().add(label_5);
 
-        // Inicializa o dicionário com o idioma padrão
         try {
-            dicionario = new Dicionario("Inglês");
-            atualizarBandeira("Inglês"); // Exibe a bandeira inicial
+            dicionario = new Dicionario("Ingles");
+            atualizarBandeira("Ingles");
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Erro ao carregar o dicionário: " + e.getMessage());
         }
     }
 
-    // Atualiza o idioma com base no ComboBox
     private void atualizarIdioma() {
         String idiomaSelecionado = comboBox.getSelectedItem().toString();
         label_2.setText(idiomaSelecionado);
         try {
             dicionario.setIdioma(idiomaSelecionado);
-            atualizarBandeira(idiomaSelecionado); // Atualiza a bandeira com o idioma selecionado
+            atualizarBandeira(idiomaSelecionado);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Erro ao mudar o idioma: " + e.getMessage());
         }
     }
 
-    // Atualiza a bandeira exibida na label_5
     private void atualizarBandeira(String idioma) {
-        // Ajusta o nome do arquivo para evitar problemas com acentos
-        String nomeArquivo = idioma.toLowerCase().replace("ê", "e") + ".jpeg";
-
-        // Caminho completo da imagem
-        String caminhoImagem = "src/imagens/" + nomeArquivo;
+        String nomeArquivo = idioma.toLowerCase() + ".jpeg";
 
         try {
-            // Carrega e redimensiona a imagem
-            ImageIcon bandeiraOriginal = new ImageIcon(caminhoImagem);
+            ImageIcon bandeiraOriginal = new ImageIcon(getClass().getResource("/imagens/" + nomeArquivo));
+
             Image imagemRedimensionada = bandeiraOriginal.getImage().getScaledInstance(label_5.getWidth(), label_5.getHeight(), Image.SCALE_SMOOTH);
             label_5.setIcon(new ImageIcon(imagemRedimensionada));
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Erro ao carregar a bandeira: " + caminhoImagem);
+            JOptionPane.showMessageDialog(this, "Erro ao carregar a bandeira: " + nomeArquivo);
+            e.printStackTrace();
         }
     }
 
-    // Traduz a palavra digitada
+
     private void traduzirPalavra() {
         String termo = textField.getText().trim();
         if (termo.isEmpty()) {
@@ -145,19 +148,48 @@ public class TelaDicionario extends JFrame {
             return;
         }
 
-        // Tenta traduzir automaticamente, determinando o idioma da palavra
         ArrayList<String> traducoes = dicionario.traduzirParaPortugues(termo);
         if (traducoes.isEmpty()) {
-            // Caso não encontre no idioma corrente, tenta traduzir do português para o idioma
             traducoes = dicionario.traduzirParaIdioma(termo);
         }
 
         if (traducoes.isEmpty()) {
             textArea.setText("Nenhuma tradução encontrada.");
         } else {
-            textArea.setText(String.join(", ", traducoes));
+            textArea.setText("Tradução: " + String.join(", ", traducoes));
         }
     }
+
+    private void buscarPalavra() {
+        String termo = textField.getText().trim();
+        if (termo.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Por favor, insira uma palavra para buscar.");
+            return;
+        }
+
+        ArrayList<String> resultadosIdioma = dicionario.localizarPalavraIdioma(termo);
+
+        ArrayList<String> resultadosPortugues = dicionario.localizarPalavraPortugues(termo);
+
+        StringBuilder sugestoes = new StringBuilder();
+
+        sugestoes.append("Sugestões em " + dicionario.getIdiomaCorrente() + ": " );
+        if (resultadosIdioma.isEmpty()) {
+            sugestoes.append("Nenhuma palavra encontrada.\n");
+        } else {
+            sugestoes.append(String.join(", ", resultadosIdioma)).append("\n");
+        }
+
+        sugestoes.append("Sugestões em Portugues: ");
+        if (resultadosPortugues.isEmpty()) {
+            sugestoes.append("Nenhuma palavra encontrada.");
+        } else {
+            sugestoes.append(String.join(", ", resultadosPortugues));
+        }
+
+        textArea.setText(sugestoes.toString());
+    }
+
 
     public static void main(String[] args) {
         TelaDicionario tela = new TelaDicionario();
