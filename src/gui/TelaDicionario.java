@@ -23,6 +23,8 @@ public class TelaDicionario extends JFrame {
     private JLabel label_5;
 
     private Dicionario dicionario;
+    private JButton buttonBuscar_1;
+    private JButton buttonTraduzir_1;
 
     public TelaDicionario() {
     	setForeground(new Color(192, 192, 192));
@@ -35,32 +37,32 @@ public class TelaDicionario extends JFrame {
         getContentPane().setLayout(null);
 
         textField = new JTextField();
-        textField.setBounds(87, 130, 204, 27);
+        textField.setBounds(87, 130, 332, 27);
         getContentPane().add(textField);
         textField.setColumns(10);
 
-        buttonTraduzir = new JButton("Traduzir");
+        buttonTraduzir = new JButton("Traduzir para português");
         buttonTraduzir.setForeground(new Color(255, 255, 255));
         buttonTraduzir.setBackground(new Color(0, 0, 0));
         buttonTraduzir.setFont(new Font("Dubai", Font.BOLD, 12));
         buttonTraduzir.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                traduzirPalavra();
+                traduzirPalavraPPortugues();
             }
         });
-        buttonTraduzir.setBounds(87, 200, 100, 23);
+        buttonTraduzir.setBounds(85, 201, 164, 23);
         getContentPane().add(buttonTraduzir);
 
-        buttonBuscar = new JButton("Buscar");
+        buttonBuscar = new JButton("Buscar em portugês");
         buttonBuscar.setForeground(new Color(255, 255, 255));
         buttonBuscar.setBackground(new Color(0, 0, 0));
         buttonBuscar.setFont(new Font("Dubai", Font.BOLD, 12));
         buttonBuscar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                buscarPalavra();
+                buscarPalavraEmPortugues();
             }
         });
-        buttonBuscar.setBounds(200, 200, 100, 23);
+        buttonBuscar.setBounds(85, 172, 164, 23);
         getContentPane().add(buttonBuscar);
 
         label = new JLabel("Insira a palavra");
@@ -95,17 +97,42 @@ public class TelaDicionario extends JFrame {
         getContentPane().add(label_3);
 
         textArea = new JTextArea();
-        textArea.setBounds(87, 275, 300, 50);
+        textArea.setBounds(87, 275, 341, 50);
         textArea.setEditable(false);
         getContentPane().add(textArea);
 
         label_2 = new JLabel("Ingles");
-        label_2.setBounds(157, 79, 59, 14);
+        label_2.setBounds(167, 78, 59, 14);
         getContentPane().add(label_2);
 
         label_5 = new JLabel();
-        label_5.setBounds(87, 59, 59, 46);
+        label_5.setBounds(87, 59, 73, 46);
         getContentPane().add(label_5);
+        
+        buttonBuscar_1 = new JButton("Buscar em "+ comboBox.getSelectedItem().toString());
+        buttonBuscar_1.setForeground(Color.WHITE);
+        buttonBuscar_1.setFont(new Font("Dubai", Font.BOLD, 12));
+        buttonBuscar_1.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                buscarPalavraNoIdioma();
+            }
+        });
+        buttonBuscar_1.setBackground(Color.BLACK);
+        buttonBuscar_1.setBounds(256, 171, 164, 23);
+        getContentPane().add(buttonBuscar_1);
+        
+        
+        buttonTraduzir_1 = new JButton("Traduzir para " + comboBox.getSelectedItem().toString());
+        buttonTraduzir_1.setForeground(Color.WHITE);
+        buttonTraduzir_1.setFont(new Font("Dubai", Font.BOLD, 12));
+        buttonTraduzir_1.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                traduzirPalavraPIdioma();
+            }
+        });
+        buttonTraduzir_1.setBackground(Color.BLACK);
+        buttonTraduzir_1.setBounds(256, 201, 164, 23);
+        getContentPane().add(buttonTraduzir_1);
 
         try {
             dicionario = new Dicionario("Ingles");
@@ -118,6 +145,10 @@ public class TelaDicionario extends JFrame {
     private void atualizarIdioma() {
         String idiomaSelecionado = comboBox.getSelectedItem().toString();
         label_2.setText(idiomaSelecionado);
+
+        buttonBuscar_1.setText("Buscar em " + idiomaSelecionado);
+        buttonTraduzir_1.setText("Traduzir para " + idiomaSelecionado);
+
         try {
             dicionario.setIdioma(idiomaSelecionado);
             atualizarBandeira(idiomaSelecionado);
@@ -125,6 +156,7 @@ public class TelaDicionario extends JFrame {
             JOptionPane.showMessageDialog(this, "Erro ao mudar o idioma: " + e.getMessage());
         }
     }
+
 
     private void atualizarBandeira(String idioma) {
         String nomeArquivo = idioma.toLowerCase() + ".jpeg";
@@ -141,50 +173,75 @@ public class TelaDicionario extends JFrame {
     }
 
 
-    private void traduzirPalavra() {
+    private void traduzirPalavraPPortugues() {
         String termo = textField.getText().trim();
         if (termo.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Por favor, insira uma palavra para traduzir.");
+            JOptionPane.showMessageDialog(this, "Por favor, insira uma palavra para traduzir para português.");
             return;
         }
 
         ArrayList<String> traducoes = dicionario.traduzirParaPortugues(termo);
+        
         if (traducoes.isEmpty()) {
-            traducoes = dicionario.traduzirParaIdioma(termo);
-        }
-
-        if (traducoes.isEmpty()) {
-            textArea.setText("Nenhuma tradução encontrada.");
+            textArea.setText("Nenhuma tradução para português encontrada.");
         } else {
-            textArea.setText("Tradução: " + String.join(", ", traducoes));
+            textArea.setText("Tradução para português: " + String.join(", ", traducoes));
         }
     }
-
-    private void buscarPalavra() {
+    
+    private void traduzirPalavraPIdioma() {
         String termo = textField.getText().trim();
         if (termo.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Por favor, insira uma palavra para buscar.");
+            JOptionPane.showMessageDialog(this, "Por favor, insira uma palavra para traduzir para " + comboBox.getSelectedItem().toString());
             return;
         }
 
-        ArrayList<String> resultadosIdioma = dicionario.localizarPalavraIdioma(termo);
+        ArrayList<String> traducoes = dicionario.traduzirParaIdioma(termo);
+        
+        if (traducoes.isEmpty()) {
+            textArea.setText("Nenhuma tradução em " + comboBox.getSelectedItem().toString() + " encontrada.");
+        } else {
+            textArea.setText("Tradução para " + comboBox.getSelectedItem().toString() + ": " + String.join(", ", traducoes));
+        }
+    }
+
+    private void buscarPalavraEmPortugues() {
+        String termo = textField.getText().trim();
+        if (termo.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Por favor, insira uma palavra para buscar em português.");
+            return;
+        }
 
         ArrayList<String> resultadosPortugues = dicionario.localizarPalavraPortugues(termo);
 
         StringBuilder sugestoes = new StringBuilder();
-
-        sugestoes.append("Sugestões em " + dicionario.getIdiomaCorrente() + ": " );
-        if (resultadosIdioma.isEmpty()) {
-            sugestoes.append("Nenhuma palavra encontrada.\n");
-        } else {
-            sugestoes.append(String.join(", ", resultadosIdioma)).append("\n");
-        }
 
         sugestoes.append("Sugestões em Portugues: ");
         if (resultadosPortugues.isEmpty()) {
             sugestoes.append("Nenhuma palavra encontrada.");
         } else {
             sugestoes.append(String.join(", ", resultadosPortugues));
+        }
+
+        textArea.setText(sugestoes.toString());
+    }
+    
+    private void buscarPalavraNoIdioma() {
+        String termo = textField.getText().trim();
+        if (termo.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Por favor, insira uma palavra para buscar no " + comboBox.getSelectedItem().toString());
+            return;
+        }
+
+        ArrayList<String> resultadosIdioma = dicionario.localizarPalavraIdioma(termo);
+
+        StringBuilder sugestoes = new StringBuilder();
+
+        sugestoes.append("Sugestões em " + comboBox.getSelectedItem().toString() + ": ");
+        if (resultadosIdioma.isEmpty()) {
+            sugestoes.append("Nenhuma palavra encontrada.");
+        } else {
+            sugestoes.append(String.join(", ", resultadosIdioma));
         }
 
         textArea.setText(sugestoes.toString());
