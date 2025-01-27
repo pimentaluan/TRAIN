@@ -21,7 +21,8 @@ public class Dicionario {
 	        this.idiomaCorrente = idioma;
 	        carregarTraducoes(scanner);
 	    } catch (Exception e) {
-	        throw new Exception("Idioma não encontrado ou erro ao carregar: " + idioma, e);
+	        throw new Exception("Idioma não encontrado ou erro ao carregar: " + idioma,
+	        		e);
 	    }
 	}
 
@@ -50,13 +51,16 @@ public class Dicionario {
 	}
 
 	public ArrayList<String> traduzirParaPortugues(String termo) {
-		ArrayList<String> resultados = new ArrayList<>();
-		for (String[] traducao : traducoes) {
-			if (traducao[0].equalsIgnoreCase(termo)) {
-				resultados.add(traducao[1]);
-			}
-		}
-		return resultados;
+	    ArrayList<String> resultados = new ArrayList<>();
+	    for (String[] traducao : traducoes) {
+	        if (traducao[0].equalsIgnoreCase(termo)) {
+	            resultados.add(traducao[1]);
+	        }
+	    }
+	    if (resultados.isEmpty()) {
+	        throw new IllegalArgumentException("Nenhuma tradução encontrada para o termo: " + termo);
+	    }
+	    return resultados;
 	}
 
 	public ArrayList<String> traduzirParaIdioma(String termo) {
