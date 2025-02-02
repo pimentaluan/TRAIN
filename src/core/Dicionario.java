@@ -57,9 +57,7 @@ public class Dicionario {
 	            resultados.add(traducao[1]);
 	        }
 	    }
-	    if (resultados.isEmpty()) {
-	        throw new IllegalArgumentException("Nenhuma tradução encontrada para o termo: " + termo);
-	    }
+	    
 	    return resultados;
 	}
 
