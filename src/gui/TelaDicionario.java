@@ -21,7 +21,7 @@ public class TelaDicionario extends JFrame {
     private JTextArea textArea;
     private JLabel label_2;
     private JLabel label_5;
-    private JLabel label_6; // Nova JLabel para as mensagens do sistema
+    private JLabel label_6; 
 
     private Dicionario dicionario;
     private JButton buttonBuscar_1;
@@ -110,10 +110,10 @@ public class TelaDicionario extends JFrame {
         label_5.setBounds(87, 59, 73, 46);
         getContentPane().add(label_5);
         
-        label_6 = new JLabel(); // Inicializando a JLabel para mensagens do sistema
+        label_6 = new JLabel(); // aqui é o label para msg do sistema
         label_6.setForeground(Color.WHITE);
         label_6.setFont(new Font("Dubai", Font.PLAIN, 12));
-        label_6.setBounds(87, 335, 341, 20); // A posição abaixo da textArea
+        label_6.setBounds(87, 335, 341, 20); // colocando posição abaixo da textArea
         getContentPane().add(label_6);
 
         buttonBuscar_1 = new JButton("Buscar em " + comboBox.getSelectedItem().toString());
@@ -180,18 +180,18 @@ public class TelaDicionario extends JFrame {
         String termo = textField.getText().trim();
         if (termo.isEmpty()) {
             label_6.setText("Por favor, insira uma palavra para traduzir para português.");
-            textArea.setText(""); // Limpar o textArea
+            textArea.setText(""); 
             return;
         }
 
         ArrayList<String> traducoes = dicionario.traduzirParaPortugues(termo);
         
         if (traducoes.isEmpty()) {
-            textArea.setText(""); // Limpar o textArea
+            textArea.setText(""); 
             label_6.setText("Nenhuma tradução para português encontrada.");
         } else {
             textArea.setText("Tradução para português: " + String.join(", ", traducoes));
-            label_6.setText(""); // Limpar a mensagem de sistema
+            label_6.setText(""); 
         }
     }
     
@@ -219,7 +219,7 @@ public class TelaDicionario extends JFrame {
         String termo = textField.getText().trim();
         if (termo.isEmpty()) {
             label_6.setText("Por favor, insira uma palavra para buscar em português.");
-            textArea.setText(""); // Limpar o textArea
+            textArea.setText("");
             return;
         }
 
@@ -227,12 +227,12 @@ public class TelaDicionario extends JFrame {
 
         if (resultadosPortugues.isEmpty()) {
             label_6.setText("Nenhuma palavra encontrada em português.");
-            textArea.setText(""); // Limpar o textArea
+            textArea.setText("");
         } else {
             StringBuilder sugestoes = new StringBuilder();
             sugestoes.append("Sugestões em Português: ");
             sugestoes.append(String.join(", ", resultadosPortugues));
-            label_6.setText(""); // Limpar a mensagem de erro, se houver
+            label_6.setText("");
             textArea.setText(sugestoes.toString());
         }
     }
@@ -241,7 +241,7 @@ public class TelaDicionario extends JFrame {
         String termo = textField.getText().trim();
         if (termo.isEmpty()) {
             label_6.setText("Por favor, insira uma palavra para buscar no " + comboBox.getSelectedItem().toString());
-            textArea.setText(""); // Limpar o textArea
+            textArea.setText("");
             return;
         }
 
@@ -249,12 +249,12 @@ public class TelaDicionario extends JFrame {
 
         if (resultadosIdioma.isEmpty()) {
             label_6.setText("Nenhuma palavra encontrada em " + comboBox.getSelectedItem().toString() + ".");
-            textArea.setText(""); // Limpar o textArea
+            textArea.setText("");
         } else {
             StringBuilder sugestoes = new StringBuilder();
             sugestoes.append("Sugestões em " + comboBox.getSelectedItem().toString() + ": ");
             sugestoes.append(String.join(", ", resultadosIdioma));
-            label_6.setText(""); // Limpar a mensagem de erro, se houver
+            label_6.setText(""); 
             textArea.setText(sugestoes.toString());
         }
     }
