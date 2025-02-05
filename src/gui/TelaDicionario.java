@@ -190,15 +190,16 @@ public class TelaDicionario extends JFrame {
             textArea.setText(""); 
             label_6.setText("Nenhuma tradução para português encontrada.");
         } else {
-            textArea.setText("Tradução para português: " + String.join(", ", traducoes));
-            label_6.setText(""); 
+        	textArea.setText("Tradução para português: " + String.join(", ", traducoes) +
+                    "\nTotal de resultados: " + traducoes.size());            
+        	label_6.setText(""); 
         }
     }
     
     private void traduzirPalavraPIdioma() {
         String termo = textField.getText().trim();
         if (termo.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Por favor, insira uma palavra para traduzir para " + comboBox.getSelectedItem().toString());
+        	label_6.setText("Por favor, insira uma palavra para traduzir para " + comboBox.getSelectedItem().toString());
             return;
         }
 
@@ -209,7 +210,8 @@ public class TelaDicionario extends JFrame {
         	textArea.setText("");
             label_6.setText("Nenhuma tradução em " + comboBox.getSelectedItem().toString() + " encontrada.");
         } else {
-            textArea.setText("Tradução para " + comboBox.getSelectedItem().toString() + ": " + String.join(", ", traducoes));
+        	textArea.setText("Tradução para " + comboBox.getSelectedItem().toString() + ": " + String.join(", ", traducoes) +
+                    "\nTotal de resultados: " + traducoes.size());
         }
     }
 
@@ -232,6 +234,9 @@ public class TelaDicionario extends JFrame {
             StringBuilder sugestoes = new StringBuilder();
             sugestoes.append("Sugestões em Português: ");
             sugestoes.append(String.join(", ", resultadosPortugues));
+            sugestoes.append("\nTotal de resultados: " + resultadosPortugues.size());
+            textArea.setText(sugestoes.toString());
+
             label_6.setText("");
             textArea.setText(sugestoes.toString());
         }
@@ -241,6 +246,7 @@ public class TelaDicionario extends JFrame {
         String termo = textField.getText().trim();
         if (termo.isEmpty()) {
             label_6.setText("Por favor, insira uma palavra para buscar no " + comboBox.getSelectedItem().toString());
+            
             textArea.setText("");
             return;
         }
@@ -254,6 +260,8 @@ public class TelaDicionario extends JFrame {
             StringBuilder sugestoes = new StringBuilder();
             sugestoes.append("Sugestões em " + comboBox.getSelectedItem().toString() + ": ");
             sugestoes.append(String.join(", ", resultadosIdioma));
+            sugestoes.append("\nTotal de resultados: " + resultadosIdioma.size());
+            textArea.setText(sugestoes.toString());
             label_6.setText(""); 
             textArea.setText(sugestoes.toString());
         }
